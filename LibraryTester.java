@@ -61,6 +61,12 @@ public class LibraryTester {
         
         //test getFile length
         System.out.println(funTimes.fileLength("test.txt"));
+        
+        //TEST addLine
+        
+        funTimes.addLine("test.txt", "this is but a test fello spock'");
+        
+        System.out.println(funTimes.fileLength("test.txt"));
     }
     
 }

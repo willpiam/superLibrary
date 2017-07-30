@@ -10,6 +10,7 @@
  * -get system time in millaseconds
  * -convert anything to a string
  */
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -158,8 +159,86 @@ public class superLibrary {
             e.printStackTrace();//gives debugging information
         }
         return linenumber;//returns the number of lines
-    }//end fileLength()
+    }//end fileLength()     (WORKING)
     
+    public static void addLine(String fileName, String toAppend){//sub will be responsable for appending line to data file
+        //get data file as list
+        String oldFile[] = grabFile(fileName);
+        //get length of data file
+        int oldLength = fileLength(fileName);
+        //new length = length +1
+        int newLength = oldLength +1;
+        //create list of new length
+        String newList[] = new String[newLength];
+        //right all the lines of the old list to the new list (leave the last spot empty)
+        for (int i = 0; i<oldLength; i++){//i is 0, keep going untill i is not less than oldLength, every loop increase i by one
+            newList[i]= oldFile[i];
+        }
+        //put the appended thing into the last spot 
+        newList[newLength-1] = toAppend;
+        //rewrite the data file with our new list
+        writeList(fileName, newList);
+    }//end addLine      (WORKING)
+    
+    public static String[] grabFile(String fileName/*UPDATE NEEDED: use fileLength function*/){
+        //!!!get length of data file as linenumber
+        //code borrowed from: mkyong.com/java/how-to-get-the-total-number-of-lines-of-a-file-in-java/
+        int linenumber = 0;//needed to declare this outside of try/if for some reason probibly because java thinks those things may never assign it a value
+        try{
+            File file = new File(fileName);// there is a file, lets call it "file", it is found at fileName
+            if (file.exists()){//if there really is a file at that spot do this
+                FileReader fr = new FileReader(file);
+                LineNumberReader lnr = new LineNumberReader(fr);//lnr stands for Line Number Reader
+               
+                linenumber = 0;//we have not started counting lines yet so we set this to zero
+                while (lnr.readLine() != null){//as long as we're still getting lines with data (any thing askii) keep looping
+                    linenumber++;//add one to your line count
+                }
+                // System.out.println("Total number of lines:"+ linenumber);//for testing
+                lnr.close();//no point leaving the file open
+            }//END IF \
+            else{//if there is no file at that spot tell the user how bad of a programmer i am
+                System.out.println("OMG! ERROR! file cound not be found");
+            }//end else
+           
+        }
+        catch(IOException e){//if something terrable happens
+            e.printStackTrace();//gives debugging information
+        }
+        //!!!create list of that length
+        String fileLines[] = new String[linenumber];
+        //!!!take data from data file and put each line into list
+        try{
+            FileReader file = new FileReader(fileName);//open file
+            BufferedReader buffer = new BufferedReader(file);
+            for (int i=0;i<linenumber; i++){//start i at zero, increase by one each time, stop when i lis not less than the amount of lines
+                fileLines[i] = buffer.readLine();
+            }//end i loop
+            buffer.close();
+        }
+        catch(IOException e){
+            System.out.println ("Sorry, the file was not found (was looking to read).");
+        } 
+        //return list
+       
+        return fileLines;
+    }//end grabFile     (WORKING)
+    
+    public static void writeList(String fileName, String toWrite[]){//writes a list to a file
+        int length = toWrite.length;//gets length of file as length
+        //open file
+        try{
+            PrintWriter writer = new PrintWriter(fileName, "UTF-8");//opens folder.. if folder does not excist it creates one
+            for (int i = 0; i<length; i++){//loop as long as the lenght of the list
+                 writer.println(toWrite[i]);
+            }//end for i loop
+            writer.close();//closes file
+           }
+            catch (IOException e) {}//end catch
+       
+       
+       
+    }//end writeList()      (WORKING)
 }
 /**
  * THINGS TO ADD
